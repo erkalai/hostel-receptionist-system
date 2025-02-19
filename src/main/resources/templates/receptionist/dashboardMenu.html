@@ -1,0 +1,71 @@
+ <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .navbar {
+            background-color: #00796b;
+        }
+
+        .navbar a {
+            color: white !important;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .card-header {
+            background-color: #00796b;
+        }
+    </style>
+<div class="container-fluid dashboard-menu" th:fragment="dashboard-menu">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 sidebar">
+                <h3 class="text-center mb-4">Menu</h3>
+                <a href="/bookings/checkin">Check In</a>
+                <a href="#">User Logs</a>
+                <a href="#">Rework</a>
+                <a href="#">Settings</a>
+            </aside>
+
+            <!-- Main Content 
+            <main class="col-md-9 col-lg-10 main-content">
+                <div id="outputArea">
+                    <h2>Welcome to the Admin Dashboard</h2>
+                    <p>Use the sidebar to navigate through the features.</p>
+                </div>
+            </main>
+            -->
+        </div>
+    </div>
+    <script>
+    
+   
+    
+    </script>

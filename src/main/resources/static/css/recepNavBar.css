@@ -1,0 +1,36 @@
+
+        .navBarContainerFrag {
+            font-family: Georgia, serif;
+            font-size: 30px;
+            font-weight: bolder;
+            text-align: center;
+            color: rgb(4, 4, 168);
+            background-color: rgb(255, 255, 255);
+            height: 60px;
+            line-height: 60px;
+        }
+
+        .navibarFrag {
+            background-color: rgb(238, 231, 221);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-linkFrag {
+            color: rgb(4, 4, 168) !important;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-linkFrag:hover {
+            color: rgb(255, 0, 0) !important;
+        }
+
+        .btn-outline-successFrag {
+            border-color: rgb(4, 4, 168);
+            color: rgb(4, 4, 168);
+        }
+
+        .btn-outline-successFrag:hover {
+            background-color: rgb(4, 4, 168);
+            color: white;
+        }
