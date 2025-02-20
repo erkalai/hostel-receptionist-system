@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<title>Responsive Admin Dashboard</title>
+<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f4f8fb;
+}
+
+.navbar {
+	background-color: #007bff;
+}
+
+.navbar a {
+	color: white !important;
+}
+
+.sidebar {
+	background-color: #343a40;
+	height: 100vh;
+	color: white;
+	padding: 20px;
+	position: sticky;
+	top: 0;
+}
+
+.sidebar a {
+	color: #adb5bd;
+	text-decoration: none;
+	display: block;
+	padding: 10px;
+	border-radius: 4px;
+	margin: 5px 0;
+}
+
+.sidebar a:hover {
+	background-color: #495057;
+	color: white;
+}
+
+.main-content {
+	padding: 20px;
+}
+
+@media ( max-width : 768px) {
+	.sidebar {
+		height: auto;
+		position: relative;
+	}
+}
+
+.chart-container {
+	position: relative;
+	max-width: 700px;
+	margin: auto;
+}
+
+.modal-header {
+	background-color: #007bff;
+	color: white;
+}
+
+.btn-primary {
+	background-color: #007bff;
+	border: none;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3;
+}
+
+.btn-danger {
+	background-color: #dc3545;
+	border: none;
+}
+
+.btn-danger:hover {
+	background-color: #a71d2a;
+}
+
+.dropdown-item {
+  background-color: #343a40;
+  color: #adb5bd;
+  border-radius: 4px;
+}
+
+.dropdown-item:hover {
+  background-color: #495057;
+  color: white;
+}
+
+.dropdown-toggle::after {
+  color: #adb5bd;
+}
+
+.dropdown-menu{
+
+  background-color: #343a40;
+}
+</style>
+</head>
+<body>
+
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Admin Dashboard</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item"><a class="nav-link" href="#">Search</a></li>
+					<li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			
+<!-- Sidebar -->
+<aside class="col-md-3 col-lg-2 sidebar">
+  <button class="btn btn-danger w-100 my-2" data-bs-toggle="modal" data-bs-target="#createUserModal">Register Form</button>
+
+  <!-- More Options Dropdown -->
+  <div class="dropdown">
+    <button
+      class="btn btn-secondary dropdown-toggle w-100 my-2"
+      type="button"
+      id="moreOptionsDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false">
+      More Options
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="moreOptionsDropdown">
+      <li><a class="dropdown-item" href="/reports">Booking Reports</a></li>
+      <li><a class="dropdown-item" href="/programs">Manage Programs</a></li>
+      <li><a class="dropdown-item" href="/complaint/management">Manage Complaints</a></li>
+      <li><a class="dropdown-item" href="/bookings/checkin">Check In</a></li>
+      <li><a class="dropdown-item" href="/bookings/checkout">Check Out</a></li>
+      <li><a class="dropdown-item" href="/rooms/change-room">Change Room</a></li>
+      <li><a class="dropdown-item" href="complaint">Register Complaint</a></li>
+      <li><a class="dropdown-item" href="/bookings/preEntry">Pre Booked Guest</a></li>
+    </ul>
+  </div>
+
+  <a href="/admin/manage-rooms">Manage Rooms</a>
+  <a href="/admin/users">Manage Users</a>
+  <a href="/settings">Settings</a>
+</aside>
+
+			
+
+
+
+			<!-- Main Content -->
+			<main class="col-md-9 col-lg-10 main-content">
+				<div id="outputArea">
+					<div class="row">
+						<div class="col-md-4">
+							<canvas id="roomOccupancyChart"></canvas>
+						</div>
+						<div class="col-md-8">
+							<div class="chart-container">
+								<select id="timeframeSelector" class="form-select mb-3">
+									<option value="daily">Daily</option>
+									<option value="monthly">Monthly</option>
+									<option value="yearly">Yearly</option>
+								</select>
+								<canvas id="checkinCheckoutChart"></canvas>
+							</div>
+							<select id="handleChart" class="form-select mb-3"
+								onchange="handleChangeChart()">
+								<option value="line">Line</option>
+								<option value="Pie">Pie Chart</option>
+								<option value="bar">Bar Chart</option>
+							</select>
+							<canvas id="checkinCheckoutChart1"></canvas>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<!-- Create User Modal -->
+	<div class="modal fade" id="createUserModal" tabindex="-1"
+		aria-labelledby="createUserModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="createUserModalLabel">Create New
+						User</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="createUserForm" th:action="@{/admin/createUser}"
+						method="post" th:object="${user}">
+						<div class="mb-3">
+							<label for="firstName" class="form-label">First Name</label> <input
+								type="text" class="form-control" id="firstName" name="firstName"
+								placeholder="Enter First Name" required>
+						</div>
+						<div class="mb-3">
+							<label for="lastName" class="form-label">Last Name</label> <input
+								type="text" class="form-control" id="lastName" name="lastName"
+								placeholder="Enter Last Name" required>
+						</div>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label> <input
+								type="email" class="form-control" id="email" name="email"
+								placeholder="Enter Email" required>
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label">Password</label> <input
+								type="password" class="form-control" id="password"
+								name="password" placeholder="Enter Password" required>
+						</div>
+						<div class="mb-3">
+							<label for="role" class="form-label">Role</label> <select
+								class="form-select" id="role" th:field="*{roleName}" required>
+								<option value="" disabled selected>Select a role</option>
+								<option th:each="role : ${roles}" th:value="${role}"
+									th:text="${#strings.capitalize(role)}"></option>
+							</select>
+						</div>
+						<button type="submit" class="btn btn-primary w-100">Create
+							User</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+	//----------------
+	
+	
+	//Handle room occupancy data----------Start
+  fetch('http://localhost:8080/rooms/occupancy')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch room occupancy data');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const occupied = data['Occupied Rooms'] || 0;
+      const available = data['Available Rooms'] || 0;
+
+      const ctx = document.getElementById('roomOccupancyChart').getContext('2d');
+
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Occupied Rooms', 'Available Rooms'],
+          datasets: [{
+            label: 'Room Occupancy',
+            data: [occupied, available],
+            backgroundColor: ['#FF6384', '#36A2EB'],
+            hoverOffset: 4,
+          }],
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+          },
+        },
+      });
+
+      document.getElementById('roomOccupancyChart').style.width = '300px';
+      document.getElementById('roomOccupancyChart').style.height = '300px';
+    })
+    .catch(error => console.error('Error fetching room occupancy data:', error));
+//Handle room occupancy data----------End
+
+
+
+    //Handle Register Form----------------------Start
+    document.getElementById('createUserForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const data = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        role: formData.get('role')
+      };
+
+      console.log('User Data:', data);
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById('createUserModal'));
+      modal.hide();
+    });
+  //Handle Register Form----------------------End
+  
+  
+  
+  
+//Chart Bar-----------------------------Start
+    // Function to fetch data from the backend
+async function fetchData(timeframe) {
+    const response = await fetch(`/bookings/${timeframe}`);
+    return response.json();
+}	
+
+// Chart.js Initialization
+const ctxBar = document.getElementById('checkinCheckoutChart').getContext('2d');
+const chartType = 'handleChart';
+const chart = new Chart(ctxBar, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            {
+                label: 'Check-ins',
+                data: [],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Check-outs',
+                data: [],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+        },
+    },
+});
+
+
+//------------- Handle Change Chart Type
+
+
+function handleChangeChart(type){
+	const line = type;
+	if(line === line){
+		const ctxBar1 = document.getElementById('checkinCheckoutChart').getContext('2d');
+		//const chartType = 'handleChart';
+		const chart1 = new Chart(ctxBar, {
+		    type: 'line',
+		    data: {
+		        labels: [],
+		        datasets: [
+		            {
+		                label: 'Check-ins',
+		                data: [],
+		                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+		                borderColor: 'rgba(54, 162, 235, 1)',
+		                borderWidth: 1,
+		            },
+		            {
+		                label: 'Check-outs',
+		                data: [],
+		                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+		                borderColor: 'rgba(255, 99, 132, 1)',
+		                borderWidth: 1,
+		            },
+		        ],
+		    },
+		    options: {
+		        responsive: true,
+		        plugins: {
+		            legend: { position: 'top' },
+		        },
+		    },
+		});
+	}
+
+}
+
+
+
+// Update Chart Function
+function updateChart(timeframe) {
+    fetchData(timeframe).then((data) => {
+        let labels, checkins, checkouts;
+
+        if (timeframe === 'daily') {
+            labels = ['Today'];
+            checkins = [data.checkins];
+            checkouts = [data.checkouts];
+        } else {
+            labels = data.map((entry) => entry.month || entry.year);
+            checkins = data.map((entry) => entry.checkins);
+            checkouts = data.map((entry) => entry.checkouts);
+        }
+
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = checkins;
+        chart.data.datasets[1].data = checkouts;
+        chart.update();
+    });
+}
+
+// Event Listener for Dropdown
+document.getElementById('timeframeSelector').addEventListener('change', (event) => {
+    const timeframe = event.target.value;
+    updateChart(timeframe);
+});
+
+// Initial Chart Load
+updateChart('daily');
+
+
+
+
+	
+	//----------------
+	</script>
+</body>
+</html>

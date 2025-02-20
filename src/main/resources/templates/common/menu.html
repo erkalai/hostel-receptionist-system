@@ -1,0 +1,31 @@
+<div class="menu-container-frag" th:fragment="menu-bar">
+	<!-- Hamburger Button -->
+	<button class="menu-btn-frag" id="menu-btn" onclick="toggleMenu()">☰</button>
+
+	<!-- Hidden Menu -->
+	<div id="menu" class="menu-content-frag">
+	 <button class="" onclick="window.location.href='/dashboard'">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+		<!-- Close Button -->
+		<button class="close-btn-frag mt-1" onclick="closeMenu()">X</button>
+
+		<div class="mt-5">
+			<a href="/dashboard">Dashboard</a>
+		<a href="/bookings/checkin">Check
+			IN</a>
+			<a href="/bookings/checkout">Check Out</a>
+			<a
+			href="/rooms/view-rooms">Room Data</a>
+			<a
+			href="/rooms/change-room">Change Room</a>
+			 <a href="/complaint">Register
+			Complaint</a> 
+			 <a href="/complaint"></a> 
+			 <a href="/complaint"></a> 
+			 <a href="/complaint"></a> 
+			
+			 <a href="/logout">Logout</a>
+		</div>
+	</div>
+</div>
