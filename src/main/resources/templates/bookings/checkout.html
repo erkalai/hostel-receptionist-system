@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Checkout Page</title>
+<link rel="stylesheet" th:href="@{/css/newstylea.css}">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	rel="stylesheet">
+<style>
+body {
+	background-color: #F0F4F8;
+	color: #2D3436;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+.navbartop {
+	font-family: Georgia, serif;
+	font-size: 30px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #1F3A58;
+	padding: 10px 20px;
+}
+
+.navbartop .text-center {
+	text-align: center;
+	font-size: 30px;
+	color: #FFFFFF;
+	flex-grow: 1;
+}
+
+.userName {
+	font-size: 13px;
+	color: #FFFFFF;
+}
+
+.fa-user-circle {
+	font-size: 24px;
+	color: #FFFFFF;
+	margin-right: 7px;
+}
+
+.header {
+	background-color: #1F3A58;
+	padding: 20px 0;
+}
+
+.top-right {
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #1F3A58;
+}
+
+.top-right form {
+	display: flex;
+	align-items: center;
+}
+
+.form-control-search {
+	width: 20%;
+	border-radius: 5px;
+	height: 4vh;
+	margin: 10px 0px 10px 10px;
+}
+
+.btn-outline-success {
+	background-color: #3A6EA5;
+	color: white;
+	border-radius: 5px;
+	padding: 5px 15px;
+	font-size: 14px;
+}
+
+.btn-outline-success:hover {
+	background-color: #2C4A6B;
+}
+
+/* Floors buttons */
+.floors button {
+	margin-left: 50px;
+
+	padding: 0px;
+	font-size: 20px;
+	cursor: pointer;
+	width: auto;
+	text-align: center;
+	color: white;
+	border-radius: 5px;
+	border: none;
+	background-color: #1F3A58;
+}
+
+.floors button:hover {
+	color: yellow;
+}
+
+.roomselection button {
+	background-color: #04294e;
+	color: white;
+	padding: 15px;
+	border-radius: 5px;
+	text-align: center;
+	cursor: pointer;
+	width: 100%;
+	border: none;
+	transition: background-color 0.3s;
+}
+
+.roomselection button:hover {
+	background-color: #053b72;
+}
+
+.modal-dialog {
+	max-width: 600px;
+	margin: auto;
+}
+
+.modal {
+	max-width: 600px;
+	margin: auto;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.modal-content {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+	background-color: #1F3A58;
+	color: white;
+}
+
+.modal-footer {
+	background-color: #F0F4F8;
+}
+
+/* Custom Styling for Radio Buttons */
+.form-check-label {
+	background-color: #F4A261;
+	border-radius: 5px;
+	transition: background-color 0.3s ease;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	width: 100%;
+	padding: 12px;
+	margin: 8px 0;
+	display: block;
+	text-align: center;
+}
+
+.form-check-label:hover {
+	background-color: #e17d4b;
+}
+
+.form-check-input:checked+.form-check-label {
+	background-color: #1F3A58;
+	color: #fff;
+	border-color: #A1C88B;
+}
+
+/* Modal Body */
+#guestModal .modal-body {
+	padding: 20px;
+	background-color: #F0F4F8; 
+}
+
+.form-check-input {
+	display: none;
+}
+
+/* Footer */
+footer {
+	background-color: #1F3A58;
+	color: white;
+	padding: 10px 0;
+	text-align: center;
+	margin-top: 30px;
+}
+
+/* Responsive Grid */
+.roomselection {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	gap: 15px;
+	margin-top: 20px;
+}
+</style>
+<link rel="stylesheet" th:href="@{/css/menu.css}">
+</head>
+<body>
+
+
+
+
+	<div
+		class="navbartop container-fluid d-flex justify-content-between align-items-center my-2">
+		<div class="floors mt-1" id="floors"></div>
+		<div class="flex-grow-1 text-center">Guest Check-Out</div>
+		<div class="userName d-flex align-items-center">
+			<i class="fas fa-user-circle mr-2"></i> <span
+				th:text="${userName.name}"></span>
+		</div>
+	</div>
+
+	<!-- Main Content -->
+	<div class="container-fluid">
+
+		<div th:replace="common/menu :: menu-bar"></div>
+		<div class="floors mt-1" id="floors"></div>
+
+		<div class="roomselection" id="rooms">
+			<div th:each="room : ${occupiedRooms}"
+				th:attr="data-floor=${room.floor}">
+				<button class="room-button" th:text="'Room ' + ${room.roomNumber}"
+					th:classappend="${room.capacity == room.maxCapacity ? 'green' : room.capacity == 0 ? 'red' : 'yellow'}"
+					th:onclick="'fetchGuests(' + ${room.id} + ')'" type="button"></button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="guestModal" tabindex="-1"
+		aria-labelledby="guestModalLabel" aria-hidden="true"
+		data-bs-backdrop="true" data-bs-keyboard="true" >
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="guestModalLabel">Select a Guest</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<form id="checkoutForm" method="post"
+					th:action="@{/bookings/checkout}">
+					<div class="modal-body" id="guestContainer">
+						<!-- Guest list will appear here -->
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary" id="checkoutButton">CheckOut</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer
+    <footer>
+        <p>&copy; 2025 Checkout Management System</p>
+    </footer>  -->
+
+	<script>
+        // Fetch guest list and display it in the modal
+        function fetchGuests(roomId) {
+            if (roomId) {
+                fetch(`/bookings/guests/by-room?roomId=${roomId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const guestContainer = document.getElementById("guestContainer");
+                        guestContainer.innerHTML = ''; // Clear previous content
+
+                        if (data.length > 0) {
+                            // Create and append the guest radio buttons
+                            data.forEach(guest => {
+                                const radioDiv = document.createElement("div");
+                                radioDiv.className = "form-check";
+
+                                const radioButton = document.createElement("input");
+                                radioButton.className = "form-check-input";
+                                radioButton.type = "radio";
+                                radioButton.id = `guest-${guest.id}`;
+                                radioButton.name = "guestId";
+                                radioButton.value = guest.id;
+
+                                const label = document.createElement("label");
+                                label.className = "form-check-label";
+                                label.htmlFor = `guest-${guest.id}`;
+                                label.textContent = `${guest.name} - ${guest.kid}`;
+
+                                radioDiv.appendChild(radioButton);
+                                radioDiv.appendChild(label);
+                                guestContainer.appendChild(radioDiv);
+                            });
+
+                            // Show the modal when guests are fetched
+                            const guestModal = new bootstrap.Modal(document.getElementById('guestModal'));
+                            guestModal.show();
+                        } else {
+                            guestContainer.innerHTML = '<p>No guests found for this room</p>';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching guests:', error));
+            }
+        }
+
+        // Handle form submission for checkout
+        document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+            const selectedGuest = document.querySelector('input[name="guestId"]:checked');
+            if (!selectedGuest) {
+                alert("Please select a guest before proceeding.");
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Proceed with checkout (you can add any necessary logic here)
+            const guestId = selectedGuest.value;
+            alert(`Proceeding to checkout for guest ID: ${guestId}`);
+        });
+
+        // Fetch floors and render buttons
+        async function loadFloors() {
+            try {
+                const response = await fetch('/rooms/floors');
+                const floors = await response.json();
+                renderFloorButtons(floors);
+            } catch (error) {
+                console.error("Error fetching floors:", error);
+            }
+        }
+
+        // Render floor buttons dynamically
+        function renderFloorButtons(floors) {
+            const floorsContainer = document.getElementById('floors');
+            floorsContainer.innerHTML = '';
+            floors.forEach(floor => {
+                const button = document.createElement('button');
+                button.textContent = `Floor ${floor}`;
+                button.onclick = () => filterFloor(floor);
+                floorsContainer.appendChild(button);
+            });
+        }
+
+        // Filter rooms based on the selected floor
+        function filterFloor(floorNumber) {
+            const rooms = document.querySelectorAll('[data-floor]');
+            rooms.forEach(room => {
+                room.style.display = room.getAttribute('data-floor') == floorNumber ? 'block' : 'none';
+            });
+        }
+
+        // Load data on page load
+        window.onload = () => {
+            loadFloors();
+            filterFloor(1); 
+        };
+    </script>
+	<script th:src="@{/js/backButtonPage.js}"></script>
+
+	<script th:src="@{/js/menu.js}" defer></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+</body>
+</html>

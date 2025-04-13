@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Manage Programs</title>
+<!-- Bootstrap 4.5.2 CSS (Updated Version) -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- FontAwesome for Icons -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/menu.css}">
+
+
+<style>
+body {
+	background-color: #F8F9FA;
+}
+
+.navbartop {
+	font-family: Georgia, serif;
+	font-size: 30px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #1F3A58;
+	padding: 10px 20px;
+}
+
+.navbartop .text-center {
+	text-align: center;
+	font-size: 30px;
+	color: #FFFFFF;
+	flex-grow: 1;
+}
+
+.userName {
+	font-size: 13px;
+	color: #FFFFFF;
+}
+
+.fa-user-circle {
+	font-size: 24px;
+	color: #FFFFFF;
+	margin-right: 7px;
+}
+
+.form-container {
+	padding: 30px;
+	background-color: #FFFFFF;
+	border-radius: 8px;
+	margin-bottom: 30px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border: 1px solid #DDD;
+}
+
+.form-container h2, .form-container h4 {
+	margin-bottom: 20px;
+	color: #1E3A5F;
+	font-weight: bold;
+}
+
+/* Form Elements */
+.form-control {
+	height: 45px;
+	border: 1px solid #CCC;
+	transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+	border-color: #1E3A5F;
+	box-shadow: 0 0 5px rgba(30, 58, 95, 0.5);
+}
+
+.btn-primary {
+	background-color: #FF7A00;
+	border: none;
+	font-weight: bold;
+}
+
+.btn-primary:hover {
+	background-color: #E56700;
+}
+
+.btn-warning {
+	background-color: #343A40;
+	color: #FFF;
+	font-weight: bold;
+}
+
+.btn-warning:hover {
+	background-color: #495057;
+}
+
+/* Table Styles */
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #1E3A5F;
+	color: #FFFFFF;
+	text-align: left;
+	padding: 12px;
+}
+
+td {
+	padding: 12px;
+	border-bottom: 1px solid #DDD;
+}
+
+td a {
+	text-decoration: none;
+	padding: 8px 12px;
+	border-radius: 4px;
+	font-size: 14px;
+	transition: background-color 0.3s;
+}
+
+td a.edit {
+	background-color: #28A745;
+	color: #FFFFFF;
+}
+
+td a.edit:hover {
+	background-color: #218838;
+}
+
+td a.delete {
+	background-color: #E74C3C;
+	color: #FFFFFF;
+}
+
+td a.delete:hover {
+	background-color: #C0392B;
+}
+
+/* Responsive Adjustments */
+@media ( max-width : 768px) {
+	.form-container {
+		margin-bottom: 15px;
+	}
+	table {
+		font-size: 14px;
+	}
+}
+
+@media ( max-width : 480px) {
+	.form-container {
+		margin-bottom: 10px;
+	}
+	table {
+		font-size: 12px;
+	}
+}
+
+/* Success/Error Messages */
+.alert-success {
+	background-color: #28A745;
+	color: #FFFFFF;
+}
+
+.alert-danger {
+	background-color: #E74C3C;
+	color: #FFFFFF;
+}
+</style>
+
+</head>
+<body>
+	<div
+		class="navbartop container-fluid d-flex justify-content-between align-items-center my-2">
+		<div class="flex-grow-1 text-center">Manage Programs</div>
+		<div class="userName d-flex align-items-center">
+			<i class="fas fa-user-circle mr-2"></i> <span
+				th:text="${userName.name}"></span>
+		</div>
+	</div>
+
+
+	<div class="container">
+
+		<div th:replace="common/menu :: menu-bar"></div>
+		<!-- Success or Error Messages -->
+		<div th:if="${successMessage != null}" class="alert alert-success">
+			<p th:text="${successMessage}"></p>
+		</div>
+		<div th:if="${errorMessage != null}" class="alert alert-danger">
+			<p th:text="${errorMessage}"></p>
+		</div>
+
+		<!-- Row for Form and Table -->
+		<div class="row">
+			<!-- Create/Update Program Form -->
+			<div class="col-md-4 col-12">
+				<div class="form-container">
+					<h4>Create/Edit Program</h4>
+					<form
+						th:action="@{${program.id} != null ? '/programs/edit/' + ${program.id} : '/programs/create'}"
+						th:object="${program}" method="post">
+						<div class="form-group">
+							<label for="name">Program Name:</label> <input type="text"
+								id="name" name="name" th:field="*{name}" class="form-control"
+								placeholder="Enter program name" required />
+						</div>
+						<div class="form-group">
+							<label for="isStarred">Star Program:</label> <input
+								type="checkbox" id="isStarred" name="isStarred"
+								th:field="*{isStarred}" /> <small class="form-text text-muted">Check
+								to mark this program as important.</small>
+						</div>
+						<button type="submit" class="btn btn-primary btn-block ">
+							<span
+								th:text="${program.id != null ? 'Update Program' : 'Create Program'}"></span>
+						</button>
+						<button class="btn btn-warning btn-block mt-3"
+							onclick="window.location.href='/dashboard'">
+							<i class="fas fa-arrow-left"></i> Back
+						</button>
+					</form>
+				</div>
+			</div>
+
+			<!-- List of Programs -->
+			<div class="col-md-8 col-12">
+				<div class="form-container">
+					<h2>Programs List</h2>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Program Name</th>
+								<th>Starred</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="program : ${programs}">
+								<td th:text="${program.name}"></td>
+								<td th:text="${program.isStarred ? '★' : ''}"></td>
+								<td>
+									<!-- Edit Button --> <a
+									th:href="@{/programs/edit/{id}(id=${program.id})}"
+									class="edit btn btn-success btn-sm"> <i class="fas fa-edit"></i>
+										Edit
+								</a> <!-- Delete Button --> <a
+									th:href="@{/programs/delete/{id}(id=${program.id})}"
+									class="delete btn btn-danger btn-sm"
+									onclick="return confirm('Are you sure you want to delete this program?')">
+										<i class="fas fa-trash-alt"></i> Delete
+								</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Side MenuBar JS  -->
+	<script th:src="@{/js/menu.js}" defer></script>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

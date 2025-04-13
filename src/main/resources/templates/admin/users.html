@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>User Management</title>
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet" />
+
+<!-- FontAwesome for Icons -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	rel="stylesheet" />
+
+<!-- Side Menu Bar -->
+<link rel="stylesheet" th:href="@{/css/menu.css}" />
+
+<style>
+.navbartop {
+	font-family: Georgia, serif;
+	font-size: 30px;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #1f3a58;
+	padding: 10px 20px;
+}
+
+.navbartop .text-center {
+	text-align: center;
+	font-size: 30px;
+	color: #ffffff;
+	flex-grow: 1;
+}
+
+.userName {
+	font-size: 13px;
+	color: #ffffff;
+}
+
+.fa-user-circle {
+	font-size: 24px;
+	color: #ffffff;
+	margin-right: 7px;
+}
+
+.btn-back, .btn-new {
+	color: white;
+}
+
+.btn-back:hover, .btn-new:hover {
+	color: yellow;
+}
+
+.sticky {
+	position: sticky;
+	top: 20px; 
+	z-index: 1000;
+}
+</style>
+</head>
+<body>
+	<div
+		class="navbartop container-fluid d-flex justify-content-between align-items-center my-2 sticky">
+		<button class="btn btn-back ms-5"
+			onclick="window.location.href='/dashboard'">
+			<i class="fas fa-arrow-left"></i> Back
+		</button>
+
+		<button type="button" class="btn btn-new ms-2" data-bs-toggle="modal"
+			data-bs-target="#createUserModal">
+			Create User <span><i class="fas fa-solid fa-plus"></i></span>
+		</button>
+		<div class="flex-grow-1 text-center">Manage Users</div>
+		<div class="userName d-flex align-items-center">
+			<i class="fas fa-user-circle mr-2"></i> <span
+				th:text="${userName.name}"></span>
+		</div>
+	</div>
+	<div class="container mt-5">
+		<div th:replace="common/menu :: menu-bar"></div>
+
+		<!-- Success and Error Messages -->
+		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+		<div th:if="${success}" class="alert alert-success"
+			th:text="${success}"></div>
+
+		<!-- User Table -->
+		<div class="card">
+			<div class="card-header">User List</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Status</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="user : ${users}">
+								<td th:text="${user.id}"></td>
+								<td th:text="${user.name}"></td>
+								<td th:text="${user.email}"></td>
+								<td><span th:text="${user.active} ? 'Active' : 'Inactive'"
+									class="badge"
+									th:classappend="${user.active} ? 'bg-success' : 'bg-danger'"></span>
+								</td>
+								<td>
+									<div class="btn-group" role="group">
+										<form th:action="@{/admin/activateUser/{id}(id=${user.id})}"
+											method="post">
+											<button type="submit" class="btn btn-sm btn-success ms-1">
+												Activate</button>
+										</form>
+										<form th:action="@{/admin/deactivateUser/{id}(id=${user.id})}"
+											method="post">
+											<button type="submit" class="btn btn-sm btn-warning ms-1">
+												Deactivate</button>
+										</form>
+										<a th:href="@{/admin/editUser/{id}(id=${user.id})}">
+											<button type="submit" class="btn btn-sm btn-primary ms-1">
+												Edit</button>
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Create User Modal -->
+	<div class="modal fade" id="createUserModal" tabindex="-1"
+		aria-labelledby="createUserModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="createUserModalLabel">Create New
+						User</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form th:action="@{/admin/createUser}" method="post"
+						th:object="${user}">
+						<div class="mb-3">
+							<label for="firstName" class="form-label">First Name</label> <input
+								type="text" class="form-control" id="firstName" name="firstName"
+								placeholder="Enter First Name" required />
+						</div>
+						<div class="mb-3">
+							<label for="lastName" class="form-label">Last Name</label> <input
+								type="text" class="form-control" id="lastName" name="lastName"
+								placeholder="Enter Last Name" required />
+						</div>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label> <input
+								type="email" class="form-control" id="email" name="email"
+								placeholder="Enter Email" required />
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label">Password</label> <input
+								type="password" class="form-control" id="password"
+								name="password" placeholder="Enter Password" required />
+						</div>
+						<div class="mb-3">
+							<label for="role" class="form-label">Role</label> <select
+								class="form-select" id="role" th:field="*{roleName}" required>
+								<option value="" disabled selected>Select a role</option>
+								<option th:each="role : ${roles}" th:value="${role}"
+									th:text="${#strings.capitalize(role)}"></option>
+							</select>
+						</div>
+						<button type="submit" class="btn btn-primary w-100">
+							Create User</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Side MenuBar JS  -->
+	<script th:src="@{/js/menu.js}" defer></script>
+	<!-- Bootstrap JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

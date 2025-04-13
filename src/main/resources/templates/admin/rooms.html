@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Rooms</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/menu.css}">
+    <style>
+    
+    .navbartop {
+        font-family: Georgia, serif;
+        font-size: 30px;
+        font-weight: bold;
+        color: #FFFFFF;
+        background-color: #1F3A58; 
+        padding: 10px 20px;
+    }
+
+    .navbartop .text-center {
+        text-align: center;
+        font-size: 30px;
+        color: #FFFFFF;
+        flex-grow: 1;
+    }
+
+    .userName {
+        font-size: 13px;
+        color: #FFFFFF;
+    }
+
+    .fa-user-circle {
+        font-size: 24px;
+        color: #FFFFFF;
+        margin-right: 7px;
+    }
+    
+        .form-container {
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td a {
+            text-decoration: none;
+            padding: 5px 10px;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+
+        td a:hover {
+            background-color: #ddd;
+        }
+
+        td a.delete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        td a.edit {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                margin-bottom: 15px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            td, th {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                margin-bottom: 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            td, th {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+	<div class="navbartop container-fluid d-flex justify-content-between align-items-center my-2">
+    <div class="flex-grow-1 text-center">Manage Rooms</div>
+    <div class="userName d-flex align-items-center">
+        <i class="fas fa-user-circle mr-2"></i>
+        <span  th:text="${userName.name}"></span>
+    </div>
+</div>
+
+<div class="container">
+
+	<div th:replace="common/menu :: menu-bar"></div>
+
+    <!-- Success or Error Message -->
+    <div th:if="${successMessage != null}" class="alert alert-success">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage != null}" class="alert alert-danger">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- Row for Form and Table -->
+    <div class="row">
+        <!-- Create Room Form (small column) -->
+        <div class="col-md-4 col-12">
+            <div class="form-container">
+                <h2>Create Room</h2>
+                <form th:action="@{${room.id} != null ? '/admin/edit-room/' + ${room.id} : '/admin/create-room'}" th:object="${room}" method="post">
+                    <div class="form-group">
+                        <label for="roomNumber">Room Number:</label>
+                        <input type="text" id="roomNumber" name="roomNumber" th:field="*{roomNumber}" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="floor">Floor:</label>
+                        <input type="number" id="floor" name="floor" th:field="*{floor}" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="capacity">Capacity:</label>
+                        <input type="number" id="capacity" name="capacity" th:field="*{capacity}" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="maxCapacity">Max Capacity:</label>
+                        <input type="number" id="maxCapacity" name="maxCapacity" th:field="*{maxCapacity}" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <span th:text="${room.id != null ? 'Update Room' : 'Create Room'}"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Existing Rooms Table (larger column) -->
+        <div class="col-md-8 col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Room Number</th>
+                        <th>Floor</th>
+                        <th>Current Capacity</th>
+                        <th>Max Capacity</th>
+                        <th>Available</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="room : ${rooms}">
+                        <td th:text="${room.roomNumber}"></td>
+                        <td th:text="${room.floor}"></td>
+                        <td th:text="${room.capacity}"></td>
+                        <td th:text="${room.maxCapacity}"></td>
+                        <td th:text="${room.maxCapacity > room.capacity ? 'Yes' : 'No'}"></td>
+                        <td>
+                            <!-- Edit button -->
+                            <a th:href="@{/admin/edit-room/{id}(id=${room.id})}" class="edit btn btn-success btn-sm">Edit</a>
+                            <!-- Delete button -->
+                            <a th:href="@{/admin/delete-room/{id}(id=${room.id})}" class="delete btn btn-danger btn-sm" 
+                               onclick="return confirm('Are you sure you want to delete this room?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Side MenuBar JS  -->
+<script th:src="@{/js/menu.js}" defer></script>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

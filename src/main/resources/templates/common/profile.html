@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>User Profile</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+/* Custom Styles for color and design */
+body {
+	background-color: #f8f9fa;
+}
+
+.container {
+	max-width: 900px;
+}
+
+.card-header {
+	background-color: #007bff;
+	color: white;
+	font-weight: bold;
+}
+
+.table th {
+	background-color: #007bff;
+	color: white;
+}
+
+.btn-custom {
+	background-color: #28a745;
+	color: white;
+}
+
+.alert-success {
+	background-color: #28a745;
+	color: white;
+}
+
+.alert-danger {
+	background-color: #dc3545;
+	color: white;
+}
+
+.section-title {
+	color: #007bff;
+	border-bottom: 2px solid #007bff;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<div class="container mt-4">
+		<h1 class="text-center mb-4 section-title">User Profile</h1>
+
+		<!-- Display Success or Error Messages -->
+		<div th:if="${success}" class="alert alert-success">
+			<span th:text="${success}"></span>
+		</div>
+		<div th:if="${error}" class="alert alert-danger">
+			<span th:text="${error}"></span>
+		</div>
+
+		<!-- User Details Section -->
+		<div class="mb-4">
+			<h4 class="section-title">Personal Details</h4>
+			<div class="row">
+				<div class="col-12 col-md-6">
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td><strong>Name</strong></td>
+								<td th:text="${user.name}"></td>
+							</tr>
+							<tr>
+								<td><strong>Email</strong></td>
+								<td th:text="${user.email}"></td>
+							</tr>
+							<!-- Add other user fields here -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- Button to Trigger Modal -->
+		<button type="button" class="btn btn-warning" data-bs-toggle="modal"
+			data-bs-target="#changePasswordModal">Change Password</button>
+
+
+		<button class="btn btn-danger"
+			onclick="window.location.href='/dashboard'">
+			<i class="fas fa-arrow-left"></i> Back
+		</button>
+
+		<!-- Change Password Modal -->
+		<div class="modal fade" id="changePasswordModal" tabindex="-1"
+			aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="changePasswordModalLabel">Change
+							Password</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="/profile/change-password" method="post">
+							<div class="mb-3">
+								<label for="oldPassword" class="form-label">Old Password</label>
+								<input type="password" id="oldPassword" name="oldPassword"
+									class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="newPassword" class="form-label">New Password</label>
+								<input type="password" id="newPassword" name="newPassword"
+									class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="confirmPassword" class="form-label">Confirm
+									New Password</label> <input type="password" id="confirmPassword"
+									name="confirmPassword" class="form-control" required>
+							</div>
+							<button type="submit" class="btn btn-custom">Update
+								Password</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

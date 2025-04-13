@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Pre Booked Guests</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	
+	
+	<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/menu.css}">
+<script th:src="@{/js/menu.js}" defer></script>
+	<style>
+	
+	/* General Styling */
+body {
+	background-color: #F4F7FB; 
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: #2C3E50;
+}
+
+h2.title {
+	color: #3B4D73;
+	font-family: 'Georgia', serif;
+	font-size: 28px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.navbartop {
+	font-family: Georgia, serif;
+	font-size: 30px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #1F3A58;
+	padding: 10px 20px;
+}
+
+.navbartop .text-center {
+	text-align: center;
+	font-size: 30px;
+	color: #FFFFFF;
+	flex-grow: 1;
+}
+
+.userName {
+	font-size: 13px;
+	color: #FFFFFF;
+}
+
+.fa-user-circle {
+	font-size: 24px;
+	color: #FFFFFF;
+	margin-right: 7px;
+}
+
+
+/* Container */
+.container {
+	background-color: #FFFFFF;
+	border-radius: 8px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	padding: 25px;
+}
+
+/* Form Styling */
+.form-group {
+	margin-bottom: 15px;
+}
+
+/* Select & Input fields */
+.form-control {
+	border-radius: 5px;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #B0BEC5;
+}
+
+.form-control:focus {
+	border-color: #3B4D73;
+	box-shadow: 0 0 0 0.2rem rgba(59, 77, 115, 0.25);
+}
+
+/* Label Styling */
+.form-label {
+	font-size: 14px;
+	color: #3B4D73;
+	font-weight: bold;
+}
+
+/* Buttons */
+.room-button, .btn-primary, .btn-warning {
+	background-color: #1F3A58;
+	color: white;
+	border-radius: 5px;
+	font-size: 14px;
+	padding: 10px 15px;
+	width: 100%;
+	text-align: center;
+	transition: background-color 0.3s;
+}
+
+.room-button:hover, .btn-primary:hover, .btn-warning:hover {
+	background-color: #6A7D9B;
+	color: #F2A900;
+}
+
+.room-button {
+	font-weight: bold;
+}
+
+/* Modal Styling */
+.modal-body {
+	background-color: white;
+	border-radius: 8px;
+	color: black;
+	padding: 20px;
+}
+
+.modal-content {
+	border-radius: 8px;
+}
+
+.modal-header {
+	border-bottom: 2px solid #6A7D9B;
+}
+
+.modal-footer {
+	border-top: 2px solid #6A7D9B;
+}
+
+/* Form radio buttons */
+.form-check-input {
+	display: none;
+}
+
+.form-check-label {
+	font-size: 16px;
+	background-color: #349fe6a4;
+	border-radius: 5px;
+	transition: background-color 0.3s ease;
+	color: rgb(7, 2, 49);
+	font-weight: 600;
+	cursor: pointer;
+	display: block;
+	text-align: center;
+	padding: 10px;
+	margin: 5px;
+}
+
+.form-check-label:hover {
+	background-color: #030846d2;
+	color: white;
+}
+
+.form-check-input:checked+.form-check-label {
+	background-color: #030846d2;
+	color: antiquewhite;
+}
+
+/* Responsive Design */
+@media ( max-width : 768px) {
+	.row .col-md-4, .row .col-md-3, .row .col-md-2 {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+	.buttons {
+		flex-direction: column;
+	}
+	.buttons button {
+		width: 100%;
+	}
+	.form-check-label {
+		font-size: 14px;
+		padding: 8px;
+	}
+}
+
+@media ( max-width : 576px) {
+	h2.title {
+		font-size: 20px;
+	}
+	.form-check-label {
+		font-size: 12px;
+	}
+	.form-control {
+		font-size: 14px;
+	}
+	.modal-dialog {
+		max-width: 90%;
+	}
+}
+
+#date, #time {
+	font-size: 1rem;
+	font-weight: bolder;
+	color: #3B4D73;
+	margin-top: 25px;
+	text-align: right;
+}
+
+/* Room Selection */
+#selectedRoom {
+	color: white;
+	font-weight: bold;
+}
+/* Cancel and Submit Buttons */
+.buttons {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+.buttons button {
+	width: 150px;
+	font-size: 14px;
+}
+
+.datecontainer {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.navbartop span {
+	display: flex;
+	justify-content: flex-end;
+	font-size: 1rem;
+	font-weight: bolder;
+	color: white;
+}
+
+.nav-link{
+margin-left:40px;
+font-size:1rem;
+text-decoration:none;
+color:White;
+}
+.nav-link:hover{
+color:yellow;
+
+font-size:1rem;
+text-decoration:none;
+}
+	
+	</style>
+	
+	
+</head>
+<body>
+
+	<div
+		class="navbartop container-fluid d-flex justify-content-between align-items-center my-2">
+		<div ><a href="/preEntry/findAllPreBookedGuest" class="nav-link"> Pre Booked Guest</a></div>
+		<div class="flex-grow-1 text-center">Pre Booked Guest </div>
+		<div class="userName d-flex align-items-center">
+			<i class="fas fa-user-circle mr-2"></i> <span
+				th:text="${userName.name}"></span>
+		</div>
+	</div>
+
+	<div class="container">
+	
+		<div th:replace="common/menu :: menu-bar"></div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>KID</th>
+					<th>Name</th>
+					<th>Program Name</th>
+					<th>ID Type</th>
+					<th>ID Number</th>
+					<th>Mobile</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="guest : ${PreGuests}">
+					<td th:text="${guest.kid}"></td>
+					<td th:text="${guest.name}"></td>
+					<td th:text="${guest.programName}"></td>
+					<td th:text="${guest.idType}"></td>
+					<td th:text="${guest.idNumber}"></td>
+					<td th:text="${guest.mobileNumber}"></td>
+					<td>
+						<!-- Trigger modal on click to edit pre-booked guest -->
+						<button class="btn btn-primary" data-toggle="modal"
+							data-target="#editModal" th:data-kid="${guest.kid}">
+							Edit</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Modal for editing pre-booked guest details -->
+	<div class="modal" id="editModal" tabindex="-1" role="dialog"
+		aria-labelledby="editModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editModalLabel">Edit Pre-Booked
+						Guest</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Form to edit pre-booked guest details -->
+				<form th:action="@{/guest/edit}" method="post">
+    <input type="hidden" name="id" th:value="${guest != null ? guest.id : ''}">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" class="form-control" th:value="${guest != null ? guest.name : ''}" required>
+    </div>
+    <div class="form-group">
+        <label for="programName">Program Name</label>
+        <input type="text" id="programName" name="programName" class="form-control" th:value="${guest != null ? guest.programName : ''}" required>
+    </div> 
+    <div class="form-group">
+        <!-- <label for="idType">ID Type</label>
+        <input type="text" id="idType" name="idType" class="form-control" th:value="${guest != null ? guest.idType : ''}" required>
+    </div> -->
+       <div class="form-group">
+        <label for="idType">ID Type</label>
+        <select id="idType" name="idType" class="form-control" th:value="${guest != null ? guest.idType : ''}" required>
+    <option value="Aadhar" th:selected="${guest != null && guest.idType == 'Aadhar'}">Aadhar</option>
+    <option value="Passport" th:selected="${guest != null && guest.idType == 'Passport'}">Passport</option>
+    <option value="Other" th:selected="${guest != null && guest.idType == 'Other'}">Other</option>
+</select>
+    </div>
+    <div class="form-group">
+        <label for="idNumber">ID Number</label>
+        <input type="text" id="idNumber" name="idNumber" class="form-control" th:value="${guest != null ? guest.idNumber : ''}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="text" id="mobileNumber" name="mobileNumber" class="form-control" th:value="${guest != null ? guest.mobileNumber : ''}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Include JS for Bootstrap Modal functionality -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+	 // When the 'Edit' button is clicked, fetch guest data and show in the modal
+    document.querySelectorAll('[data-toggle="modal"]').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var kid = this.getAttribute('data-kid');
+
+            fetch('/preEntry/guest/' + kid)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    // Populate the modal with the guest's current data
+                    document.querySelector('#editModal input[name="name"]').value = data.name;
+                    document.querySelector('#editModal input[name="programName"]').value = data.programName;
+                    document.querySelector('#editModal input[name="idNumber"]').value = data.idNumber;
+                    document.querySelector('#editModal input[name="mobileNumber"]').value = data.mobileNumber;
+                    document.querySelector('#editModal input[name="id"]').value = data.id;
+                    document.querySelector('#editModal input[name="idType"]').value = data.idType;
+                })
+                .catch(error => {
+                    console.error('Error fetching guest data:', error);
+                });
+        });
+    });
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="./css/newstyl.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+	crossorigin="anonymous"></script>
+<title>Dashboard</title>
+</head>
+<style>
+	/* General Styling */
+	body {
+		background-color: #F0F4F8;
+		font-family: Arial, sans-serif;
+	}
+	
+	/* Navbar Styles */
+	.navbartop {
+		font-family: Georgia, serif;
+		font-size: 30px;
+		font-weight: bold;
+		text-align: center;
+		color: #FFFFFF;
+		background-color: #1F3A58;
+		padding: 10px;
+	}
+	
+	.navibar {
+		background-color: #3A6EA5;
+	}
+	
+	.navbar-nav .nav-link {
+		color: #FFFFFF;
+		font-weight: 500;
+	}
+	
+	.navbar-nav .nav-link:hover {
+		color: #F4A261;
+	}
+	
+	/* Dropdown Menu */
+	.navbar-nav .dropdown-menu {
+		background-color: #3A6EA5;
+	}
+	
+	.navbar-nav .dropdown-item {
+		color: #FFFFFF;
+	}
+	
+	.navbar-nav .dropdown-item:hover {
+		background-color: #F4A261;
+		color: #2D3436;
+	}
+	
+	/* Button Styling */
+	.btn-primary {
+		background-color: #1F3A58;
+		border: none;
+	}
+	
+	.btn-primary:hover {
+		background-color: #3A6EA5;
+		color: #FFFFFF;
+	}
+	
+	/* Count Circle */
+	.count-circle {
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+		border-radius: 50%;
+		background-color: #F4A261;
+		color: #FFFFFF;
+		font-size: 14px;
+		font-weight: bold;
+		margin-left: 5px;
+	}
+	
+	/* Container Styling */
+	.container-bg {
+		background-color: #FFFFFF;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		padding: 40px;
+		width: 100%;
+	}
+	
+	/* Card Layout Styling */
+	.col-12 .btn {
+		padding: 20px;
+		font-size: 16px;
+		color: #FFFFFF;
+		border-radius: 10px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+	
+	.col-12 .btn img {
+		width: 40px;
+		margin-right: 10px;
+	}
+	
+	/* Form Control Styling */
+	.form-control {
+		border-radius: 5px;
+		border: 1px solid #CCCCCC;
+	}
+	
+	.form-control:focus {
+		border-color: #1F3A58;
+		box-shadow: 0 0 0 0.2rem rgba(31, 58, 88, 0.25);
+	}
+	
+	footer {
+	background-color: #1F3A58;
+	color: white;
+	text-align: center;
+	width:100%;
+	padding: 10px;
+	margin-top: 20px;
+	bottom:0;
+	position:absolute;
+}
+	</style>
+	
+
+<body>
+	<div class="navbartop my-2">Hostel Room Booking</div>
+	<nav class="navibar navbar navbar-expand-lg">
+		<div class="container-fluid">
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item"><a class="nav-link active"
+						aria-current="page" href="/dashboard">Home</a></li>
+				<!--  <li class="nav-item"><a class="nav-link"
+						href="/rooms/view-rooms"></a></li> 
+					<li class="nav-item"><a class="nav-link"
+						href="/rooms/view-rooms"></a></li> -->
+					<li class="nav-item"><a class="nav-link" href="/programs">Programs</a>
+					</li>
+					<li class="nav-item"><a class="nav-link"
+						href="/reports">Report</a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						href="/complaint/management" th:if="${pendingComplaintsCount > 0}">
+							Complaint's <span
+							class="count-circle text-bold text-white bg-danger"
+							th:text="${pendingComplaintsCount}"></span>
+					</a></li>
+					
+                <!-- Dropdown for User with Logout Option -->
+                <li class="nav-item dropdown">
+                    <button class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="${userName.name}"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+
+
+				</ul>
+				<form class="d-flex">
+					<input class="form-control me-2" type="search" placeholder="Search"
+						aria-label="Search">
+					<button class="btn btn-success" type="submit">Search</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+	<div class="container-bg">
+		
+		<div class="container my-4">
+			<div class="row text-center g-4">
+				<div class="col-12 col-md-6 col-lg-4">
+					<a class="btn btn-primary w-100" href="/bookings/checkin"> <img
+						th:src="@{img/check-in.png}" alt="Check In" style="width: 40px;">
+						Check In
+					</a>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4 ">
+					<a class="btn btn-primary w-100" href="/rooms/view-rooms">
+						<img th:src="@{img/laugh-room.png}" style="width: 40px;">
+						Room Data
+					</a>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4">
+					<a class="btn btn-primary w-100" href="/rooms/change-room"> <img
+						th:src="@{img/roomchng.png}" style="width: 40px;"> Room
+						Change
+					</a>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4">
+					<a class="btn btn-primary w-100" href="complaint"> <img
+						th:src="@{img/complaint.png}" style="width: 40px;"> Room
+						Complaints
+					</a>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4">
+					<a class="btn btn-primary w-100" href="/bookings/checkout"> <img
+						th:src="@{img/check-out.png}" style="width: 40px;"> Check
+						Out
+					</a>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4">
+					<a class="btn btn-primary w-100" href="/bookings/preEntry">
+						<img th:src="@{img/social.png}" style="width: 40px;"> Pre Entry
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Footer -->
+<footer>
+	<p>&copy; 2025 Room Management System</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Admin Settings</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/menu.css}">
+<style>
+.navbartop {
+	font-family: Georgia, serif;
+	font-size: 30px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #1F3A58;
+	padding: 10px 20px;
+}
+
+.navbartop .text-center {
+	text-align: center;
+	font-size: 30px; 
+	color: #FFFFFF;
+	flex-grow: 1;
+}
+
+.userName {
+	font-size: 13px;
+	color: #FFFFFF;
+}
+
+.fa-user-circle {
+	font-size: 24px;
+	color: #FFFFFF;
+	margin-right: 7px;
+}
+
+.custom-control-label::before {
+	background-color: #007bff;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+	background-color: #28a745;
+}
+
+.custom-control-label::after {
+	background-color: white;
+}
+</style>
+<link rel="stylesheet" th:href="@{/css/menu.css}">
+<script th:src="@{/js/menu.js}" defer></script>
+
+</head>
+<body>
+
+	<div
+		class="navbartop container-fluid d-flex justify-content-between align-items-center my-2">
+		<div class="flex-grow-1 text-center">System Settings</div>
+		<div class="userName d-flex align-items-center">
+			<i class="fas fa-user-circle mr-2"></i> <span
+				th:text="${userName.name}"></span>
+		</div>
+	</div>
+
+
+	<!-- Main container for the form -->
+	<div class="container my-5" th:fragment="settings">
+
+		<div th:replace="common/menu :: menu-bar"></div>
+		<!-- Form start -->
+		<form th:action="@{/settings/update-registration}" method="post">
+			<div class="form-group">
+				<div class="row">
+					<div class="col">
+						<label for="allowRegistration">Allow New Registration:</label>
+					</div>
+					<div class="col">
+						<!-- Custom toggle switch -->
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input"
+								name="allowRegistration" th:checked="${allowRegistration}"
+								value="true" id="allowRegistration"> <label
+								class="custom-control-label" for="allowRegistration"></label>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-primary mt-5">Save
+					Changes</button>
+			</div>
+		</form>
+	</div>
+
+	<!-- Side MenuBar JS  -->
+	<script th:src="@{/js/menu.js}" defer></script>
+
+	<!-- Bootstrap JS and dependencies (optional) -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+</body>
+</html>
